@@ -1,1 +1,1 @@
-# Scheduler
+Scheduler, an independent project, is separated from Dashboard project to execute the threads which can synchronize the build information from Jenkins system and deal with the information of different status.

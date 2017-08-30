@@ -1,0 +1,23 @@
+### Template to create Branch with pipeline mode 
+
+### Branch Name
+name: 
+### Configuration for stages
+stages:
+      ### Stage Name
+    - name: 
+      ### Configuration for jenkins job flow
+      flows:
+            ### Possible values: single / multi
+            ### If mode=multi,size of joblink must > 1
+            ### If not set the default value is: single
+          - mode: 
+            ### Job Link
+            ### Value is a link of jenkins job address
+            ### (e.g. http://hzling23.china.nsn-net.net:8080/job/LTE_eNB_FSMr4_TDD_trunk/)
+            jobs:
+                - jobLink:
+                ### optional
+                ### Configure downstream jobLinks of the current job
+                #  downstream:
+                #      - jobLink:
