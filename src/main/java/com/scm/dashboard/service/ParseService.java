@@ -16,6 +16,10 @@ public interface ParseService {
     String parseVersion(String consoleLog);
 
     String parseVersion(BuildDTO build);
+    
+    String parseCommitId(String consoleLog);
+    
+    String parseCommitId(BuildDTO build);
 
     MatchingRuleVO parseDescription(String consoleLog, Long projectId);
 }

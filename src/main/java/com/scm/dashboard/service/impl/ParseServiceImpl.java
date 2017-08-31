@@ -116,7 +116,7 @@ public class ParseServiceImpl implements ParseService {
     @Override
     public String parseVersion(BuildDTO build) {
         try {
-            Pattern pattern = Pattern.compile("([\\w\\d]+_[\\w\\d_]?[\\d]+_[\\d]+_[\\d]+)");
+            Pattern pattern = Pattern.compile(".*([\\w\\d]+_[\\w\\d_]?[\\d]+_[\\d]+_[\\d]+).*");
 
             String baseline = build.getParamVal("baseline");
             String lteRlable = build.getParamVal("LTE_RLABEL");
@@ -133,7 +133,7 @@ public class ParseServiceImpl implements ParseService {
                 if (desc != null) {
                     Matcher matcher = pattern.matcher(desc);
                     if (matcher.find()) {
-                        return matcher.group(0);
+                        return matcher.group(1);
                     }
                 }
             }
@@ -246,5 +246,47 @@ public class ParseServiceImpl implements ParseService {
             return null;
         }
         return parseVersion(consoleLog);
+    }
+
+	@Override
+	public String parseCommitId(BuildDTO build) {
+		String unifiedCommitId = build.getUnifiedCommitId(); 
+		if(null == unifiedCommitId) {
+			try {
+				Pattern pattern = Pattern.compile(".*ScirtemCommitId=([A-Za-z0-9]+).*");
+				String desc = build.getDesc();
+				if (desc != null) {
+				    Matcher matcher = pattern.matcher(desc);
+				    if (matcher.find()) {
+				    	unifiedCommitId = matcher.group(1);
+				    }
+				} else if (!build.isBuilding()) {
+				    String jenkinsLogUrl =build.getUrl()+"/consoleText";
+				    unifiedCommitId = parseCommitIdFromLog(jenkinsLogUrl);
+				}
+				
+			} catch (Throwable e) {
+				logger.error("Parse build version error",e);
+			}
+		}
+		return unifiedCommitId;
+	}
+	
+	@Override
+    public String parseCommitId(String consoleLog){
+        Pattern pattern = Pattern.compile("ScirtemCommitId=(.*)");
+        Matcher matcher = pattern.matcher(consoleLog);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+	
+	private String parseCommitIdFromLog(String jenkinsLogUrl) throws Exception{
+        String consoleLog = jenkinsService.fetchJenkinsConsoleLog(jenkinsLogUrl);
+        if (consoleLog == null) {
+            return null;
+        }
+        return parseCommitId(consoleLog);
     }
 }

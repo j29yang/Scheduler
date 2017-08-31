@@ -137,7 +137,7 @@ public class BuildServiceImpl implements BuildService {
 		build.setDataSource(CommonConstant.DEFAULT_DATA_SOURCE);
 		build.setUpstreamUrl(buildDto.getUpstreamUrl());
 		build.setUpstreamBuildNum(buildDto.getUpstreamBuild());
-		build.setUnifiedCommitId(buildDto.getUnifiedCommitId());
+		build.setUnifiedCommitId(parseService.parseCommitId(buildDto));
 		return build;
 	}
 
